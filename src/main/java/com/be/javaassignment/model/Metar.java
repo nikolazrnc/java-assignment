@@ -11,7 +11,11 @@ public class Metar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long metarId;
-    private Instant storedAt;
-    private Long subscriptionId;
+    @Column(nullable = false)
+    private Instant createdAt;
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name="subscription_id", nullable = false)
+    private Subscription subscription;
+    @Column(nullable = false)
     private String data;
 }

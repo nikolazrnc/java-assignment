@@ -10,5 +10,7 @@ import java.util.Optional;
 @Repository
 public interface MetarRepository extends JpaRepository<Metar, Long> {
 
-    Optional<Metar> findTopBySubscriptionIdOrderByStoredAtDesc(Long subscriptionId);
+    @Query("SELECT m FROM metar m WHERE m.subscription.subscriptionId=:subscriptionId ORDER BY m.createdAt DESC LIMIT 1")
+    Optional<Metar> findLatestBySubscriptionId(Long subscriptionId);
+
 }

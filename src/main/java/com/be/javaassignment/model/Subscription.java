@@ -1,12 +1,11 @@
 package com.be.javaassignment.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
+
+import java.util.List;
 
 @Data
 @Entity(name = "subscription")
@@ -15,6 +14,6 @@ public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long subscriptionId;
+    @Column(name="icao_code",nullable = false,unique = true, length = 4)
     private String icaoCode;
-
 }
