@@ -1,4 +1,6 @@
 package com.be.javaassignment.dto;
 
-public record MetarDto(String createdAt, String data) {
+import java.time.Instant;
+
+public record MetarDto(Long metarId, Instant createdAt, String data, String icaoCode) {
 }
