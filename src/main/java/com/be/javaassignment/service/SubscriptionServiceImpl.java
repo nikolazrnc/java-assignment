@@ -21,6 +21,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
     private final SubscriptionRepository subscriptionRepository;
     private final SubscriptionMapper subscriptionMapper;
 
+    @Override
     public SubscriptionDto addSubscription(SubscriptionDto subscriptionDto) {
         String icaoCode = subscriptionDto.icaoCode().toUpperCase();
         log.info("Adding subscription for airport: {}", subscriptionDto.icaoCode());
@@ -36,6 +37,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 
     }
 
+    @Override
     public SubscriptionDto deleteSubscription(String icaoCode) {
         log.info("Deleting subscription for airport: {}", icaoCode);
         Subscription deleteSubscription = subscriptionRepository.findByIcaoCode(icaoCode.toUpperCase()).orElseThrow(() -> {
@@ -47,6 +49,7 @@ public class SubscriptionServiceImpl implements SubscriptionService{
         return subscriptionMapper.toDto(deleteSubscription);
     }
 
+    @Override
     public List<SubscriptionDto> getSubscriptions() {
         log.info("Fetching subscriptions from data base");
         return subscriptionRepository.findAll().stream().map(subscriptionMapper::toDto).collect(Collectors.toList());
