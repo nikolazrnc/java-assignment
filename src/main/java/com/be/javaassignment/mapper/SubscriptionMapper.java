@@ -8,6 +8,5 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface SubscriptionMapper {
 
-    @Mapping(source = "subscriptionId", target = "subscriptionId")
     SubscriptionDto toDto(Subscription subscription);
 }

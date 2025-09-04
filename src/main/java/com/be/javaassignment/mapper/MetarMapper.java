@@ -9,11 +9,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface MetarMapper {
 
-    @Mapping(target = "metarId", source = "metarId")
+
     @Mapping(target = "icaoCode", source = "subscription.icaoCode")
     MetarDto toDto(Metar metar);
 
-    @Mapping(target = "metarId", ignore = true)
+
     @Mapping(source = "subscription", target = "subscription")
     Metar toEntity(MetarDto metarDto, Subscription subscription);
 }
