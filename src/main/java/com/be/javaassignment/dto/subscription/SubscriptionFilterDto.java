@@ -1,4 +1,4 @@
 package com.be.javaassignment.dto.subscription;
 
-public record SubscriptionFilterDto (Boolean isActive, String name){
+public record SubscriptionFilterDto (Boolean active, String name){
 }

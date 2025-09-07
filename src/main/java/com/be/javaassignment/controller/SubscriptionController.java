@@ -21,9 +21,9 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping
-    public ResponseEntity<List<SubscriptionResponseDto>> getSubscriptions(@RequestParam(required = false) Boolean isActive, @RequestParam(required = false) String name) {
+    public ResponseEntity<List<SubscriptionResponseDto>> getSubscriptions(@RequestParam(required = false) boolean active, @RequestParam(required = false) String name) {
         log.info("Received GET request for all subscriptions");
-        SubscriptionFilterDto filter = new SubscriptionFilterDto(isActive, name);
+        SubscriptionFilterDto filter = new SubscriptionFilterDto(active, name);
         return ResponseEntity.ok(subscriptionService.getSubscriptions(filter));
     }
 

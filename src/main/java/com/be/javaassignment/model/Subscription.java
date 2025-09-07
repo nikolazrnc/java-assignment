@@ -16,5 +16,5 @@ public class Subscription {
     @Pattern(regexp="^[A-Za-z]{4}$")
     private String icaoCode;
     @Column(name="is_active", nullable = false)
-    private boolean isActive;
+    private boolean active;
 }

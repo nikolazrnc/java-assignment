@@ -50,6 +50,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         Subscription subscription = new Subscription();
         subscription.setIcaoCode(subscriptionRequestDto.icaoCode());
+        subscription.setActive(true);
         subscriptionRepository.save(subscription);
         log.info("Subscription saved for airport with ICAO code {}", icaoCode);
         return subscriptionMapper.toDto(subscription);
@@ -70,7 +71,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public List<SubscriptionResponseDto> getSubscriptions(SubscriptionFilterDto filter) {
         return subscriptionRepository.findAll().stream()
-                .filter(sub -> filter.isActive()==null || sub.isActive() == filter.isActive())
+                .filter(sub -> filter.active()==null || sub.isActive() == filter.active())
                 .filter(sub -> filter.name()==null || sub.getIcaoCode().contains(filter.name().toUpperCase()))
                 .map(subscriptionMapper::toDto)
                 .collect(Collectors.toList());
@@ -82,7 +83,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             log.error("Subscription not found for airport with ICAO code {}", icaoCode);
             return new SubscriptionNotFoundException("Subscription not found for airport with ICAO code " + icaoCode);
         });
-        toUpdate.setActive(statusDto.isActive());
+        toUpdate.setActive(statusDto.active());
         subscriptionRepository.save(toUpdate);
 
         return subscriptionMapper.toDto(toUpdate);
