@@ -15,4 +15,6 @@ public class Subscription {
     @Column(name="icao_code",nullable = false,unique = true, length = 4)
     @Pattern(regexp="^[A-Za-z]{4}$")
     private String icaoCode;
+    @Column(name="is_active", nullable = false)
+    private boolean active;
 }

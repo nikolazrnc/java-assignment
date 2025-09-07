@@ -1,10 +1,7 @@
 package com.be.javaassignment.controller;
 
 import com.be.javaassignment.dto.ErrorDto;
-import com.be.javaassignment.error.InvalidIcaoCodeFormatException;
-import com.be.javaassignment.error.MetarDataNotFoundException;
-import com.be.javaassignment.error.SubscriptionAlreadyExistsException;
-import com.be.javaassignment.error.SubscriptionNotFoundException;
+import com.be.javaassignment.error.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -44,4 +41,9 @@ public class ExceptionsHandler {
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(SubscriptionIsInactiveException.class)
+    public ResponseEntity<ErrorDto> handleSubscriptionIsInactiveException(SubscriptionIsInactiveException e) {
+        ErrorDto errorDto = new ErrorDto(Instant.now(), e.getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.FORBIDDEN);
+    }
 }

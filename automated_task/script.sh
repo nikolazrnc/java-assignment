@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SUBSCRIPTION_URL="http://localhost:8080/subscriptions"
+SUBSCRIPTION_URL="http://localhost:8080/subscriptions?active=true"
 ADD_METAR_URL="http://localhost:8080/airport/"
 
 subscriptions=$(curl -s -X GET "$SUBSCRIPTION_URL" -H "Accept: application/json")
