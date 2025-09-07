@@ -1,7 +1,9 @@
 package com.be.javaassignment.service.impl;
 
 import com.be.javaassignment.dto.metar.MetarRequestDto;
+import com.be.javaassignment.dto.metar.MetarRequestFilterDto;
 import com.be.javaassignment.dto.metar.MetarResponseDto;
+import com.be.javaassignment.error.InvalidMetarFormatException;
 import com.be.javaassignment.error.MetarDataNotFoundException;
 import com.be.javaassignment.error.SubscriptionNotFoundException;
 import com.be.javaassignment.mapper.MetarMapper;
@@ -10,6 +12,7 @@ import com.be.javaassignment.model.Metar;
 import com.be.javaassignment.model.Subscription;
 import com.be.javaassignment.repository.MetarRepository;
 import com.be.javaassignment.repository.SubscriptionRepository;
+import com.be.javaassignment.service.MetarParserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +38,8 @@ class MetarServiceImplTest {
     private SubscriptionMapper subscriptionMapper;
     @Mock
     private MetarMapper metarMapper;
+    @Mock
+    private MetarParserService metarParserService;
     @InjectMocks
     private MetarServiceImpl metarService;
 
@@ -48,10 +53,29 @@ class MetarServiceImplTest {
         subscription = new Subscription();
         subscription.setSubscriptionId(1L);
         subscription.setIcaoCode("LDZA");
+        subscription.setActive(true);
 
         metar = new Metar();
-        metarRequestDto = new MetarRequestDto(Instant.parse("2003-01-01T00:00:00Z"), "LDZA 070830Z VRB02KT CAVOK 20/13 Q1022 NOSIG");
-        metarResponseDto = new MetarResponseDto(1L, Instant.parse("2003-01-01T00:00:00Z"),"LDZA 070830Z VRB02KT CAVOK 20/13 Q1022 NOSIG",1L);
+        metar.setMetarId(1L);
+        metar.setCreatedAt(Instant.parse("2025-10-06T12:00:00Z"));
+        metar.setData("LDZA 070830Z VRB02KT CAVOK 20/13 Q1022 NOSIG");
+        metar.setSubscription(subscription);
+
+        metarRequestDto = new MetarRequestDto(
+                Instant.parse("2025-10-06T12:00:00Z"),
+                "LDZA 070830Z VRB02KT CAVOK 20/13 Q1022 NOSIG"
+        );
+
+        metarResponseDto = new MetarResponseDto(
+                1L,
+                Instant.parse("2025-10-06T12:00:00Z"),
+                1L,
+                "LDZA 070830Z VRB02KT CAVOK 20/13 Q1022 NOSIG","Zagreb Airport","October 6th, 2025 at 12:00 UTC","variable at 2 knots",
+                null,"ceiling and visibility OK", null,
+                null,"20°C",
+                "13°C","1022 hPa",null,
+                "no significant changes expected");
+
     }
 
     @Test
@@ -68,7 +92,7 @@ class MetarServiceImplTest {
         assertNotNull(result);
         assertEquals("LDZA 070830Z VRB02KT CAVOK 20/13 Q1022 NOSIG", result.data());
         assertEquals(1L, result.metarId());
-        assertEquals(Instant.parse("2003-01-01T00:00:00Z"), result.createdAt());
+        assertEquals(Instant.parse("2025-10-06T12:00:00Z"), result.createdAt());
     }
 
     @Test
@@ -130,6 +154,22 @@ class MetarServiceImplTest {
         assertEquals("Subscription for airport with ICAO code "+subscription.getIcaoCode()+" not found.", exception.getMessage());
         verify(metarRepository, never()).save(any(Metar.class));
     }
+
+    @Test
+    @DisplayName("Should throw InvalidMetarFormatException when ICAO codes mismatch")
+    void shouldThrowInvalidMetarFormatException() {
+        MetarRequestDto wrongDto = new MetarRequestDto(Instant.now(), "EGLL 070830Z VRB02KT CAVOK 20/13 Q1022 NOSIG");
+
+        InvalidMetarFormatException exception = assertThrows(
+                InvalidMetarFormatException.class,
+                () -> metarService.addMetarData("LDZA", wrongDto)
+        );
+
+        assertEquals("METAR data is empty or ICAO codes don't match", exception.getMessage());
+        verify(metarRepository, never()).save(any(Metar.class));
+    }
+
+
 }
 
 

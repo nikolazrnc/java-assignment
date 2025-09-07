@@ -46,4 +46,11 @@ public class ExceptionsHandler {
         ErrorDto errorDto = new ErrorDto(Instant.now(), e.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(InvalidMetarFormatException.class)
+    public ResponseEntity<ErrorDto> handleInvalidMetarFormatException(InvalidMetarFormatException e) {
+        ErrorDto errorDto = new ErrorDto(Instant.now(), e.getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
 }
