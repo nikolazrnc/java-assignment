@@ -1,6 +1,7 @@
 package com.be.javaassignment.controller;
 
 import com.be.javaassignment.dto.ErrorDto;
+import com.be.javaassignment.error.InvalidIcaoCodeFormatException;
 import com.be.javaassignment.error.MetarDataNotFoundException;
 import com.be.javaassignment.error.SubscriptionAlreadyExistsException;
 import com.be.javaassignment.error.SubscriptionNotFoundException;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.Instant;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class ExceptionsHandler {
 
     @ExceptionHandler(SubscriptionNotFoundException.class)
     public ResponseEntity<ErrorDto> handleSubscriptionNotFoundException(SubscriptionNotFoundException e){
@@ -36,4 +37,11 @@ public class GlobalExceptionHandler {
         ErrorDto errorDto=new ErrorDto(Instant.now(), "Internal server error");
         return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(InvalidIcaoCodeFormatException.class)
+    public ResponseEntity<ErrorDto> handleInvalidIcaoCodeFormatException(InvalidIcaoCodeFormatException e) {
+        ErrorDto errorDto = new ErrorDto(Instant.now(), e.getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
 }

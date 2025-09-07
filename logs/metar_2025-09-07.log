@@ -1,0 +1,68 @@
+2025-09-07 15:14:28 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2025-09-07 15:14:29 [restartedMain] INFO  c.b.j.JavaassignmentApplication - Starting JavaassignmentApplication using Java 21.0.8 with PID 33116 (/home/vboxuser/Desktop/be_assignment/javaassignment/target/classes started by vboxuser in /home/vboxuser/Desktop/be_assignment/javaassignment)
+2025-09-07 15:14:29 [restartedMain] INFO  c.b.j.JavaassignmentApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-07 15:14:29 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-09-07 15:14:29 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-09-07 15:14:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-07 15:14:32 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 190 ms. Found 2 JPA repository interfaces.
+2025-09-07 15:14:33 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-09-07 15:14:33 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-09-07 15:14:33 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-07 15:14:33 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-09-07 15:14:33 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-07 15:14:33 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 4416 ms
+2025-09-07 15:14:34 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-07 15:14:35 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@b41845c
+2025-09-07 15:14:35 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-07 15:14:35 [restartedMain] INFO  liquibase.database - Set default schema name to public
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.changelog - Reading from public.databasechangelog
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.changelog - Reading from public.databasechangelog
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.util - UPDATE SUMMARY
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.util - Run:                          0
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.util - Previously run:               3
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.util - Filtered out:                 0
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.util - -------------------------------
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.util - Total change sets:            3
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.util - Update summary generated
+2025-09-07 15:14:37 [restartedMain] INFO  liquibase.command - Command execution complete
+2025-09-07 15:14:38 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-07 15:14:39 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.26.Final
+2025-09-07 15:14:39 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-09-07 15:14:39 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-07 15:14:40 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.9
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-07 15:14:42 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-07 15:14:42 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-07 15:14:43 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-07 15:14:44 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-09-07 15:14:44 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-09-07 15:14:44 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-09-07 15:14:44 [restartedMain] INFO  c.b.j.JavaassignmentApplication - Started JavaassignmentApplication in 17.556 seconds (process running for 19.576)
+2025-09-07 15:15:51 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-07 15:15:51 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-09-07 15:15:51 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 5 ms
+2025-09-07 15:15:52 [http-nio-8080-exec-1] INFO  c.b.j.c.SubscriptionController - Received GET request for all subscriptions
+2025-09-07 15:15:56 [http-nio-8080-exec-2] INFO  c.b.j.controller.MetarController - Received POST request to store METAR data for airport with ICAO code BGPT
+2025-09-07 15:15:56 [http-nio-8080-exec-2] INFO  c.b.j.service.impl.MetarServiceImpl - Saved METAR data for airport with ICAO code BGPT
+2025-09-07 15:15:57 [http-nio-8080-exec-4] INFO  c.b.j.controller.MetarController - Received POST request to store METAR data for airport with ICAO code LDZA
+2025-09-07 15:15:57 [http-nio-8080-exec-4] INFO  c.b.j.service.impl.MetarServiceImpl - Saved METAR data for airport with ICAO code LDZA
+2025-09-07 15:16:05 [http-nio-8080-exec-7] INFO  c.b.j.c.SubscriptionController - Received POST request for adding subscription for airport with ICAO code LDZA
+2025-09-07 15:16:05 [http-nio-8080-exec-7] WARN  c.b.j.s.impl.SubscriptionServiceImpl - Subscription already exists for airport with ICAO code LDZA
+2025-09-07 15:16:05 [http-nio-8080-exec-7] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.be.javaassignment.error.SubscriptionAlreadyExistsException: Subscription for airport with ICAO code LDZA already exists.]
+2025-09-07 15:16:14 [http-nio-8080-exec-8] INFO  c.b.j.controller.MetarController - Received POST request to store METAR data for airport with ICAO code LZA
+2025-09-07 15:16:14 [http-nio-8080-exec-8] ERROR c.b.j.service.impl.MetarServiceImpl - No subscription found for airport with ICAO code LZA
+2025-09-07 15:16:14 [http-nio-8080-exec-8] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.be.javaassignment.error.SubscriptionNotFoundException: Subscription for airport with ICAO code LZA not found.]
+2025-09-07 15:16:22 [http-nio-8080-exec-9] INFO  c.b.j.controller.MetarController - Received GET request for METAR data of airport with ICAO code LDZA
+2025-09-07 15:16:22 [http-nio-8080-exec-9] INFO  c.b.j.service.impl.MetarServiceImpl - METAR data fetched for airport with ICAO code LDZA
+2025-09-07 15:16:34 [http-nio-8080-exec-10] INFO  c.b.j.c.SubscriptionController - Received DELETE request for deleting subscription for airport with ICAO code LDZA
+2025-09-07 15:16:34 [http-nio-8080-exec-10] INFO  c.b.j.s.impl.SubscriptionServiceImpl - Deleted subscription for airport with ICAO code LDZA
+2025-09-07 15:16:41 [http-nio-8080-exec-1] INFO  c.b.j.controller.MetarController - Received GET request for METAR data of airport with ICAO code LDZA
+2025-09-07 15:16:41 [http-nio-8080-exec-1] ERROR c.b.j.service.impl.MetarServiceImpl - No subscription found for airport with ICAO code LDZA
+2025-09-07 15:16:41 [http-nio-8080-exec-1] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.be.javaassignment.error.SubscriptionNotFoundException: Subscription for airport with ICAO code LDZA not found.]

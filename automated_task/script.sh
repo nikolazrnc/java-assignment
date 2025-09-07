@@ -9,8 +9,10 @@ subscriptions=$(curl -s -X GET "$SUBSCRIPTION_URL" -H "Accept: application/json"
 METAR_DATA_URL="https://tgftp.nws.noaa.gov/data/observations/metar/stations/"
 
 for icaoCode in $(echo "$subscriptions" | jq -r '.[].icaoCode'); do
-	metar_data=$(curl -s "${METAR_DATA_URL}${icaoCode}.TXT")
-	if ! echo "$metar_data" | grep -q "<html>"; then
+	result=$(curl -sS -w "%{http_code}" "${METAR_DATA_URL}${icaoCode}.TXT")
+	status_code="${result: -3}"
+	metar_data="${result::-3}"
+	if [ "$status_code" -eq 200 ]; then
 		createdAt=$(echo "$metar_data" | head -n 1)
 		createdAt=$(date -u -d "$createdAt" +"%Y-%m-%dT%H:%M:%SZ")
 		#echo "$createdAt"

@@ -1,12 +1,12 @@
 package com.be.javaassignment.service;
 
-import com.be.javaassignment.dto.SubscriptionDto;
+import com.be.javaassignment.dto.subscription.SubscriptionRequestDto;
+import com.be.javaassignment.dto.subscription.SubscriptionResponseDto;
 
 import java.util.List;
 
 public interface SubscriptionService {
-
-    SubscriptionDto addSubscription(SubscriptionDto subscriptionDto);
-    SubscriptionDto deleteSubscription(String icaoCode);
-    List<SubscriptionDto> getSubscriptions();
+    SubscriptionResponseDto addSubscription(SubscriptionRequestDto subscriptionRequestDto);
+    SubscriptionResponseDto deleteSubscription(String icaoCode);
+    List<SubscriptionResponseDto> getSubscriptions();
 }

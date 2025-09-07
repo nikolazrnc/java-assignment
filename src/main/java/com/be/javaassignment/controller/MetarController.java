@@ -1,6 +1,7 @@
 package com.be.javaassignment.controller;
 
-import com.be.javaassignment.dto.MetarDto;
+import com.be.javaassignment.dto.metar.MetarRequestDto;
+import com.be.javaassignment.dto.metar.MetarResponseDto;
 import com.be.javaassignment.service.MetarService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,15 +17,15 @@ public class MetarController {
     private final MetarService metarService;
 
     @GetMapping
-    public ResponseEntity<MetarDto> getMetarData(@PathVariable String icaoCode){
-        log.info("Received GET request for METAR data of airport: {}", icaoCode);
+    public ResponseEntity<MetarResponseDto> getMetarData(@PathVariable String icaoCode){
+        log.info("Received GET request for METAR data of airport with ICAO code {}", icaoCode);
         return ResponseEntity.ok(metarService.getMetarData(icaoCode));
     }
 
     @PostMapping
-    public ResponseEntity<MetarDto> addMetarData(@PathVariable String icaoCode, @RequestBody MetarDto metarDto){
-        log.info("Received POST request to store METAR data for airport: {}", icaoCode);
-        return ResponseEntity.ok(metarService.addMetarData(icaoCode, metarDto));
+    public ResponseEntity<MetarResponseDto> addMetarData(@PathVariable String icaoCode, @RequestBody MetarRequestDto metarRequestDto){
+        log.info("Received POST request to store METAR data for airport with ICAO code {}", icaoCode);
+        return ResponseEntity.ok(metarService.addMetarData(icaoCode, metarRequestDto));
     }
 
 }
