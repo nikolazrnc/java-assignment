@@ -1,5 +1,6 @@
 package com.be.javaassignment.service.impl;
 
+import com.be.javaassignment.dto.subscription.SubscriptionFilterDto;
 import com.be.javaassignment.dto.subscription.SubscriptionRequestDto;
 import com.be.javaassignment.dto.subscription.SubscriptionResponseDto;
 import com.be.javaassignment.error.InvalidIcaoCodeFormatException;
@@ -44,8 +45,9 @@ class SubscriptionServiceImplTest {
     void setUp(){
         this.subscription= new Subscription();
         subscription.setIcaoCode("LDZA");
+        subscription.setActive(true);
         this.subscriptionRequestDto =new SubscriptionRequestDto("LDZA");
-        this.subscriptionResponseDto = new SubscriptionResponseDto(1L, "LDZA");
+        this.subscriptionResponseDto = new SubscriptionResponseDto(1L, "LDZA", true);
     }
 
     @Test
@@ -116,7 +118,8 @@ class SubscriptionServiceImplTest {
         when(subscriptionRepository.findAll()).thenReturn(List.of(subscription));
         when(subscriptionMapper.toDto(subscription)).thenReturn(subscriptionResponseDto);
 
-        List<SubscriptionResponseDto> result = subscriptionService.getSubscriptions();
+
+        List<SubscriptionResponseDto> result = subscriptionService.getSubscriptions(new SubscriptionFilterDto(true, null));
 
         assertEquals(1, result.size());
         assertEquals(subscriptionRequestDto.icaoCode(), result.getFirst().icaoCode());
