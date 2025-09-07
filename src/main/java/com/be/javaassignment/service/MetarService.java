@@ -1,9 +1,10 @@
 package com.be.javaassignment.service;
 
-import com.be.javaassignment.dto.MetarDto;
+import com.be.javaassignment.dto.metar.MetarRequestDto;
+import com.be.javaassignment.dto.metar.MetarResponseDto;
 
 public interface MetarService {
 
-    MetarDto getMetarData(String icaoCode);
-    MetarDto addMetarData(String icaoCode, MetarDto metarDto);
+    MetarResponseDto getMetarData(String icaoCode);
+    MetarResponseDto addMetarData(String icaoCode, MetarRequestDto metarRequestDto);
 }
