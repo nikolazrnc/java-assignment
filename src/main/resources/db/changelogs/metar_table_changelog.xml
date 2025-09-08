@@ -30,4 +30,21 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
+    <changeSet id="2-add-metar-columns" author="nikola">
+        <addColumn tableName="metar">
+            <column name="airport_name" type="VARCHAR(255)"/>
+            <column name="observation_time" type="VARCHAR(255)"/>
+            <column name="wind" type="VARCHAR(255)"/>
+            <column name="wind_variation" type="VARCHAR(255)"/>
+            <column name="visibility" type="VARCHAR(255)"/>
+            <column name="cloud_coverage" type="VARCHAR(255)"/>
+            <column name="weather" type="VARCHAR(255)"/>
+            <column name="temperature" type="VARCHAR(255)"/>
+            <column name="dew_point" type="VARCHAR(255)"/>
+            <column name="pressure" type="VARCHAR(255)"/>
+            <column name="rvr" type="VARCHAR(255)"/>
+            <column name="trend" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

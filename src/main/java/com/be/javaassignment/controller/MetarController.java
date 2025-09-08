@@ -1,6 +1,7 @@
 package com.be.javaassignment.controller;
 
 import com.be.javaassignment.dto.metar.MetarRequestDto;
+import com.be.javaassignment.dto.metar.MetarRequestFilterDto;
 import com.be.javaassignment.dto.metar.MetarResponseDto;
 import com.be.javaassignment.service.MetarService;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,12 @@ public class MetarController {
     public ResponseEntity<MetarResponseDto> addMetarData(@PathVariable String icaoCode, @RequestBody MetarRequestDto metarRequestDto){
         log.info("Received POST request to store METAR data for airport with ICAO code {}", icaoCode);
         return ResponseEntity.ok(metarService.addMetarData(icaoCode, metarRequestDto));
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<MetarResponseDto> getFilteredMetarData(@PathVariable String icaoCode,@RequestBody MetarRequestFilterDto filter){
+        log.info("Received POST request for filtered METAR data for airport with ICAO code {}", icaoCode);
+        return ResponseEntity.ok(metarService.getFilteredMetarData(icaoCode,filter));
     }
 
 }

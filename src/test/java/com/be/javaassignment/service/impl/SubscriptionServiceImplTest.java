@@ -3,6 +3,7 @@ package com.be.javaassignment.service.impl;
 import com.be.javaassignment.dto.subscription.SubscriptionFilterDto;
 import com.be.javaassignment.dto.subscription.SubscriptionRequestDto;
 import com.be.javaassignment.dto.subscription.SubscriptionResponseDto;
+import com.be.javaassignment.dto.subscription.SubscriptionStatusDto;
 import com.be.javaassignment.error.InvalidIcaoCodeFormatException;
 import com.be.javaassignment.error.SubscriptionAlreadyExistsException;
 import com.be.javaassignment.error.SubscriptionNotFoundException;
@@ -40,6 +41,7 @@ class SubscriptionServiceImplTest {
     private Subscription subscription;
     private SubscriptionRequestDto subscriptionRequestDto;
     private SubscriptionResponseDto subscriptionResponseDto;
+    private SubscriptionStatusDto subscriptionStatusDto;
 
     @BeforeEach
     void setUp(){
@@ -48,6 +50,8 @@ class SubscriptionServiceImplTest {
         subscription.setActive(true);
         this.subscriptionRequestDto =new SubscriptionRequestDto("LDZA");
         this.subscriptionResponseDto = new SubscriptionResponseDto(1L, "LDZA", true);
+        this.subscriptionStatusDto = new SubscriptionStatusDto(false);
+
     }
 
     @Test
@@ -69,7 +73,8 @@ class SubscriptionServiceImplTest {
     void shouldThrowSubscriptionAlreadyExistsException() {
         when(subscriptionRepository.findByIcaoCode(subscriptionRequestDto.icaoCode())).thenReturn(Optional.of(subscription));
 
-        SubscriptionAlreadyExistsException exception=assertThrows(SubscriptionAlreadyExistsException.class,()->subscriptionService.addSubscription(subscriptionRequestDto));
+        SubscriptionAlreadyExistsException exception=assertThrows(SubscriptionAlreadyExistsException.class,
+                ()->subscriptionService.addSubscription(subscriptionRequestDto));
         assertEquals("Subscription for airport with ICAO code "+ subscriptionRequestDto.icaoCode() + " already exists.", exception.getMessage());
         verify(subscriptionRepository, never()).save(any(Subscription.class));
     }
@@ -80,8 +85,7 @@ class SubscriptionServiceImplTest {
         SubscriptionRequestDto invalidDto = new SubscriptionRequestDto("1234");
 
         InvalidIcaoCodeFormatException exception = assertThrows(
-                InvalidIcaoCodeFormatException.class,
-                () -> subscriptionService.addSubscription(invalidDto)
+                InvalidIcaoCodeFormatException.class, () -> subscriptionService.addSubscription(invalidDto)
         );
 
         assertEquals("Invalid ICAO code format. ICAO code must contain exactly 4 letters: " + invalidDto.icaoCode(), exception.getMessage());
@@ -102,7 +106,7 @@ class SubscriptionServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should throw SubscriptionNotFoundException when subscription does not exist")
+    @DisplayName("Should throw SubscriptionNotFoundException when trying to delete subscription that does not exist")
     void shouldThrowSubscriptionNotFoundException() {
         when(subscriptionRepository.findByIcaoCode(subscriptionRequestDto.icaoCode())).thenReturn(Optional.empty());
 
@@ -125,5 +129,59 @@ class SubscriptionServiceImplTest {
         assertEquals(subscriptionRequestDto.icaoCode(), result.getFirst().icaoCode());
         assertEquals(1L, result.getFirst().subscriptionId());
     }
+
+
+    @Test
+    @DisplayName("Should reactivate an inactive subscription when trying to add subscription that already exists")
+    void shouldReactivateInactiveSubscription() {
+        subscription.setActive(false);
+        when(subscriptionRepository.findByIcaoCode(subscriptionRequestDto.icaoCode())).thenReturn(Optional.of(subscription));
+        when(subscriptionMapper.toDto(subscription)).thenReturn(subscriptionResponseDto);
+
+        SubscriptionResponseDto result = subscriptionService.addSubscription(subscriptionRequestDto);
+
+        assertNotNull(result);
+        assertTrue(subscription.isActive());
+        verify(subscriptionRepository, times(1)).save(subscription);
+    }
+
+    @Test
+    @DisplayName("Should return empty list when filter does not match any subscription")
+    void shouldReturnEmptyListWhenFilterDoesNotMatch() {
+        when(subscriptionRepository.findAll()).thenReturn(List.of(subscription));
+        List<SubscriptionResponseDto> result = subscriptionService.getSubscriptions(new SubscriptionFilterDto(false, "AAAA"));
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should update subscription status successfully")
+    void shouldUpdateSubscriptionStatusSuccessfully() {
+        SubscriptionResponseDto statusResponse=new SubscriptionResponseDto(subscription.getSubscriptionId(),subscription.getIcaoCode(), false);
+        when(subscriptionRepository.findByIcaoCode(subscriptionRequestDto.icaoCode())).thenReturn(Optional.of(subscription));
+        when(subscriptionMapper.toDto(subscription)).thenReturn(statusResponse);
+
+        SubscriptionResponseDto result = subscriptionService.updateSubscriptionStatus(subscriptionRequestDto.icaoCode(), subscriptionStatusDto);
+
+        assertFalse(subscription.isActive());
+        assertEquals(subscription.getIcaoCode(), result.icaoCode());
+        assertFalse(result.active());
+        verify(subscriptionRepository, times(1)).save(subscription);
+    }
+
+
+    @Test
+    @DisplayName("Should throw SubscriptionNotFoundException when updating status of subscription that does not exist")
+    void shouldThrowSubscriptionNotFoundExceptionOnUpdate() {
+        when(subscriptionRepository.findByIcaoCode(subscriptionRequestDto.icaoCode())).thenReturn(Optional.empty());
+
+        SubscriptionNotFoundException exception = assertThrows(SubscriptionNotFoundException.class,
+                () -> subscriptionService.updateSubscriptionStatus(subscriptionRequestDto.icaoCode(), subscriptionStatusDto));
+
+        assertEquals("Subscription not found for airport with ICAO code "+subscriptionRequestDto.icaoCode(),exception.getMessage());
+        verify(subscriptionRepository, never()).save(any());
+    }
+
+
 }
 

@@ -18,4 +18,17 @@ public class Metar {
     private Subscription subscription;
     @Column(nullable = false)
     private String data;
+
+    private String airportName;
+    private String observationTime;
+    private String wind;
+    private String windVariation;
+    private String visibility;
+    private String cloudCoverage;
+    private String weather;
+    private String temperature;
+    private String dewPoint;
+    private String pressure;
+    private String rvr;
+    private String trend;
 }
