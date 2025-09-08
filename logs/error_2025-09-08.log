@@ -1,0 +1,2 @@
+2025-09-08 17:33:27 [http-nio-8080-exec-8] ERROR c.b.j.service.impl.MetarServiceImpl - No subscription found for airport with ICAO code AYZN
+2025-09-08 17:33:38 [http-nio-8080-exec-9] ERROR c.b.j.service.impl.MetarServiceImpl - No subscription found for airport with ICAO code AYZN

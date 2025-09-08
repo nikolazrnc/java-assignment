@@ -73,7 +73,10 @@ public class MetarParserServiceImpl implements MetarParserService {
         List<String> cloudCoverage = new ArrayList<>();
         m=CLOUD.matcher(metar);
         while (m.find()) {
-            cloudCoverage.add(parseClouds(m));
+            String parsedClouds=parseClouds(m);
+            if(!parsedClouds.isBlank()) {
+                cloudCoverage.add(parsedClouds);
+            }
             metar = metar.replace(m.group(), "").trim();
         }
         if(!cloudCoverage.isEmpty()) {
@@ -107,7 +110,10 @@ public class MetarParserServiceImpl implements MetarParserService {
         List<String> weatherList = new ArrayList<>();
         m = WEATHER.matcher(metar);
         while (m.find()) {
-            weatherList.add(parseWeather(m));
+            String parsedWeather=parseWeather(m);
+            if(!parsedWeather.isBlank()) {
+                weatherList.add(parsedWeather);
+            }
             metar=metar.replace(m.group(),"").trim();
         }
         if(!weatherList.isEmpty()) {
@@ -117,7 +123,10 @@ public class MetarParserServiceImpl implements MetarParserService {
         List<String> rvrList=new ArrayList<>();
         m = RVR.matcher(metar);
         while(m.find()){
-            rvrList.add(parseRvr(m));
+            String parsedRvr=parseRvr(m);
+            if(!parsedRvr.isBlank()) {
+                rvrList.add(parsedRvr);
+            }
             metar=metar.replace(m.group(),"").trim();
         }
 

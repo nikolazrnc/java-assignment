@@ -64,7 +64,7 @@ public class MetarServiceImpl implements MetarService {
             for(var field : MetarRequestFilterDto.class.getDeclaredFields()) {
                 field.setAccessible(true);
                 Object filterValue=field.get(filter);
-                if(filterValue != null) {
+                if(Boolean.TRUE.equals(filterValue)) {
                     var entityField = Metar.class.getDeclaredField(field.getName());
                     entityField.setAccessible(true);
                     if("subscriptionId".equals(field.getName())){
