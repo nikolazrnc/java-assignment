@@ -5,6 +5,7 @@ import com.be.javaassignment.dto.metar.MetarRequestFilterDto;
 import com.be.javaassignment.dto.metar.MetarResponseDto;
 import com.be.javaassignment.error.InvalidMetarFormatException;
 import com.be.javaassignment.error.MetarDataNotFoundException;
+import com.be.javaassignment.error.SubscriptionIsInactiveException;
 import com.be.javaassignment.error.SubscriptionNotFoundException;
 import com.be.javaassignment.mapper.MetarMapper;
 import com.be.javaassignment.mapper.SubscriptionMapper;
@@ -93,6 +94,7 @@ class MetarServiceImplTest {
         assertEquals("LDZA 070830Z VRB02KT CAVOK 20/13 Q1022 NOSIG", result.data());
         assertEquals(1L, result.metarId());
         assertEquals(Instant.parse("2025-10-06T12:00:00Z"), result.createdAt());
+        verify(metarRepository, times(1)).findTopBySubscription_SubscriptionIdOrderByCreatedAtDesc(subscription.getSubscriptionId());
     }
 
     @Test
@@ -101,10 +103,8 @@ class MetarServiceImplTest {
         when(subscriptionRepository.findByIcaoCode(subscription.getIcaoCode()))
                 .thenReturn(Optional.empty());
 
-        SubscriptionNotFoundException exception = assertThrows(
-                SubscriptionNotFoundException.class,
-                () -> metarService.getMetarData(subscription.getIcaoCode())
-        );
+        SubscriptionNotFoundException exception = assertThrows(SubscriptionNotFoundException.class,
+                () -> metarService.getMetarData(subscription.getIcaoCode()));
 
         assertEquals("Subscription for airport with ICAO code "+ subscription.getIcaoCode()+" not found.", exception.getMessage());
     }
@@ -117,10 +117,8 @@ class MetarServiceImplTest {
         when(metarRepository.findTopBySubscription_SubscriptionIdOrderByCreatedAtDesc(subscription.getSubscriptionId()))
                 .thenReturn(Optional.empty());
 
-        MetarDataNotFoundException exception = assertThrows(
-                MetarDataNotFoundException.class,
-                () -> metarService.getMetarData("LDZA")
-        );
+        MetarDataNotFoundException exception = assertThrows(MetarDataNotFoundException.class,
+                () -> metarService.getMetarData(subscription.getIcaoCode()));
 
         assertEquals("No METAR data found for airport with ICAO code "+ subscription.getIcaoCode(), exception.getMessage());
     }
@@ -138,6 +136,7 @@ class MetarServiceImplTest {
         assertNotNull(result);
         assertEquals(metarRequestDto.data(), result.data());
         assertEquals(1L, result.metarId());
+        verify(metarParserService,times(1)).parseMetar(metar);
         verify(metarRepository, times(1)).save(metar);
     }
 
@@ -146,10 +145,8 @@ class MetarServiceImplTest {
     void shouldThrowSubscriptionNotFoundExceptionWhenSavingMetarData() {
         when(subscriptionRepository.findByIcaoCode(subscription.getIcaoCode())).thenReturn(Optional.empty());
 
-        SubscriptionNotFoundException exception = assertThrows(
-                SubscriptionNotFoundException.class,
-                () -> metarService.addMetarData(subscription.getIcaoCode(), metarRequestDto)
-        );
+        SubscriptionNotFoundException exception = assertThrows(SubscriptionNotFoundException.class,
+                () -> metarService.addMetarData(subscription.getIcaoCode(), metarRequestDto));
 
         assertEquals("Subscription for airport with ICAO code "+subscription.getIcaoCode()+" not found.", exception.getMessage());
         verify(metarRepository, never()).save(any(Metar.class));
@@ -160,13 +157,39 @@ class MetarServiceImplTest {
     void shouldThrowInvalidMetarFormatException() {
         MetarRequestDto wrongDto = new MetarRequestDto(Instant.now(), "EGLL 070830Z VRB02KT CAVOK 20/13 Q1022 NOSIG");
 
-        InvalidMetarFormatException exception = assertThrows(
-                InvalidMetarFormatException.class,
-                () -> metarService.addMetarData("LDZA", wrongDto)
-        );
+        InvalidMetarFormatException exception = assertThrows(InvalidMetarFormatException.class,
+                () -> metarService.addMetarData("LDZA", wrongDto));
 
         assertEquals("METAR data is empty or ICAO codes don't match", exception.getMessage());
         verify(metarRepository, never()).save(any(Metar.class));
+    }
+
+
+    @Test
+    @DisplayName("Should throw SubscriptionIsInactiveException when trying to get data for inactive subscription")
+    void shouldThrowSubscriptionIsInactiveException() {
+        subscription.setActive(false);
+        when(subscriptionRepository.findByIcaoCode(subscription.getIcaoCode())).thenReturn(Optional.of(subscription));
+
+        SubscriptionIsInactiveException exception = assertThrows(SubscriptionIsInactiveException.class,
+                () -> metarService.getMetarData(subscription.getIcaoCode()));
+
+        assertEquals("Subscription for airport with ICAO "+ subscription.getIcaoCode() + " is currently inactive", exception.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("Should filter METAR data successfully")
+    void shouldFilterMetarDataSuccessfully() {
+        when(subscriptionRepository.findByIcaoCode(subscription.getIcaoCode())).thenReturn(Optional.of(subscription));
+        when(metarRepository.findTopBySubscription_SubscriptionIdOrderByCreatedAtDesc(1L)).thenReturn(Optional.of(metar));
+        when(metarMapper.toResponseDto(any(Metar.class))).thenReturn(metarResponseDto);
+        MetarRequestFilterDto filter = new MetarRequestFilterDto(null,null,null,null,true, null, null,null,true, false,true,true,null,null,false,false);
+
+        MetarResponseDto result = metarService.getFilteredMetarData("LDZA", filter);
+
+        assertNotNull(result);
+        assertEquals(metarResponseDto.airportName(), result.airportName());
     }
 
 

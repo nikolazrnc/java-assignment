@@ -29,12 +29,6 @@ public class ExceptionsHandler {
         return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDto> handleGenericException(Exception e){
-        ErrorDto errorDto=new ErrorDto(Instant.now(), "Internal server error");
-        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @ExceptionHandler(InvalidIcaoCodeFormatException.class)
     public ResponseEntity<ErrorDto> handleInvalidIcaoCodeFormatException(InvalidIcaoCodeFormatException e) {
         ErrorDto errorDto = new ErrorDto(Instant.now(), e.getMessage());

@@ -1,7 +1,6 @@
 package com.be.javaassignment.service.impl;
 
 
-import com.be.javaassignment.dto.metar.MetarRequestDto;
 import com.be.javaassignment.model.Metar;
 import com.be.javaassignment.service.MetarParserService;
 import com.be.javaassignment.utils.MetarParserUtils;
@@ -28,31 +27,46 @@ public class MetarParserServiceImpl implements MetarParserService {
 
         Matcher m = MetarParserUtils.ICAO.matcher(metar);
         if(m.find()){
-            parsedMetar.setAirportName(ICAO_CODES_MAP.getOrDefault(m.group(1),m.group(1)));
+            String airportName=ICAO_CODES_MAP.getOrDefault(m.group(1),m.group(1));
+            if (airportName!= null && !airportName.isBlank()) {
+                parsedMetar.setAirportName(airportName);
+            }
             metar=metar.substring(4).trim();
         }
 
         m=TIME.matcher(metar);
         if (m.find()) {
-            parsedMetar.setObservationTime(parseObservationTime(parsedMetar.getCreatedAt()));
+            String observationTime=parseObservationTime(parsedMetar.getCreatedAt());
+            if (!observationTime.isBlank()) {
+                parsedMetar.setObservationTime(observationTime);
+            }
             metar =metar.replace(m.group(1), "").trim();
         }
 
         m=WIND.matcher(metar);
         if (m.find()) {
-            parsedMetar.setWind(parseWind(m));
+            String wind =parseWind(m);
+            if(!wind.isBlank()) {
+                parsedMetar.setWind(wind);
+            }
             metar = metar.replace(m.group(1), "").trim();
         }
 
         m = WIND_VARIATION.matcher(metar);
         if (m.find()) {
-            parsedMetar.setWindVariation(parseWindVariation(m.group(1)));
+            String windVariation=parseWindVariation(m.group(1));
+            if (!windVariation.isBlank()) {
+                parsedMetar.setWindVariation(windVariation);
+            }
             metar = metar.replace(m.group(1), "").trim();
         }
 
         m = VISIBILITY.matcher(metar);
         if (m.find()) {
-            parsedMetar.setVisibility(parseVisibility(m.group(1)));
+            String visibility=parseVisibility(m.group(1));
+            if(!visibility.isBlank()) {
+                parsedMetar.setVisibility(visibility);
+            }
             metar = metar.replace(m.group(1), "").trim();
         }
 
@@ -62,20 +76,30 @@ public class MetarParserServiceImpl implements MetarParserService {
             cloudCoverage.add(parseClouds(m));
             metar = metar.replace(m.group(), "").trim();
         }
-        parsedMetar.setCloudCoverage(String.join("; ", cloudCoverage));
-
+        if(!cloudCoverage.isEmpty()) {
+            parsedMetar.setCloudCoverage(String.join("; ", cloudCoverage));
+        }
 
         m = TEMP_DEW.matcher(metar);
         if (m.find()) {
-            parsedMetar.setTemperature(parseTemperature(m.group(1)));
-            parsedMetar.setDewPoint(parseTemperature(m.group(2)));
+            String temperature=parseTemperature(m.group(1));
+            String dew=parseTemperature(m.group(2));
+            if(temperature!=null && !temperature.isBlank()) {
+                parsedMetar.setTemperature(temperature);
+            }
+            if(dew != null && !dew.isBlank()) {
+                parsedMetar.setDewPoint(dew);
+            }
             metar = metar.replace(m.group(), "").trim();
         }
 
 
         m = PRESSURE.matcher(metar);
         if (m.find()) {
-            parsedMetar.setPressure(parsePressure(m.group(1)));
+            String pressure=parsePressure(m.group(1));
+            if(!pressure.isBlank()) {
+                parsedMetar.setPressure(pressure);
+            }
             metar = metar.replace(m.group(1), "").trim();
         }
 
@@ -86,7 +110,9 @@ public class MetarParserServiceImpl implements MetarParserService {
             weatherList.add(parseWeather(m));
             metar=metar.replace(m.group(),"").trim();
         }
-        parsedMetar.setWeather(String.join(", ", weatherList));
+        if(!weatherList.isEmpty()) {
+            parsedMetar.setWeather(String.join(", ", weatherList));
+        }
 
         List<String> rvrList=new ArrayList<>();
         m = RVR.matcher(metar);
@@ -95,12 +121,16 @@ public class MetarParserServiceImpl implements MetarParserService {
             metar=metar.replace(m.group(),"").trim();
         }
 
-        parsedMetar.setRvr(String.join(", ", rvrList));
-
+        if(!rvrList.isEmpty()) {
+            parsedMetar.setRvr(String.join(", ", rvrList));
+        }
 
         m = TREND.matcher(metar);
         if (m.find()) {
-            parsedMetar.setTrend(parseTrend(m.group(1)));
+            String trend=parseTrend(m.group(1));
+            if(trend!= null && !trend.isBlank()) {
+                parsedMetar.setTrend(trend);
+            }
             metar = metar.replace(m.group(1), "").trim();
         }
 
@@ -169,11 +199,11 @@ public class MetarParserServiceImpl implements MetarParserService {
         String descriptor=m.groupCount()>= 3 ? m.group(3) : null;
         String phenomenon=m.groupCount()>= 4 ? m.group(4) : null;
 
-        if (intensity != null && !intensity.isEmpty()) {
+        if(intensity != null && !intensity.isEmpty()) {
             String code=WEATHER_CODES_MAP.get(intensity);
             if (code !=null) sb.append(code).append(" ");
         }
-        if (vicinity != null) {
+        if(vicinity != null) {
             String code=WEATHER_CODES_MAP.get(vicinity);
             if (code !=null) sb.append(code).append(" ");
             if ("VC".equals(vicinity)) sb.append("in vicinity ");
@@ -223,7 +253,7 @@ public class MetarParserServiceImpl implements MetarParserService {
         String cloudCode=m.group(1);
         String cloudType =m.groupCount()>= 2 ? m.group(2) : null;
 
-        if ("SKC".equals(cloudCode) || "CLR".equals(cloudCode) || "NSC".equals(cloudCode) || "NCD".equals(cloudCode)) {
+        if("SKC".equals(cloudCode) || "CLR".equals(cloudCode) || "NSC".equals(cloudCode) || "NCD".equals(cloudCode)) {
             return CLOUD_COVERAGE_MAP.get(cloudCode);
         }
 
@@ -236,7 +266,7 @@ public class MetarParserServiceImpl implements MetarParserService {
 
         sb.append(" at ").append(height).append(" feet (").append(heightMeters).append(" meters)");
 
-        if (cloudType != null) {
+        if(cloudType != null) {
             sb.append("; Cloud type: ").append(CLOUD_COVERAGE_MAP.getOrDefault(cloudType, cloudType));
         }
         return sb.toString();
@@ -262,7 +292,7 @@ public class MetarParserServiceImpl implements MetarParserService {
     private String parseWind(Matcher m) {
         StringBuilder sb = new StringBuilder();
 
-        if ("00000KT".equals(m.group())) {
+        if("00000KT".equals(m.group())) {
             return "calm";
         }
         String direction= m.groupCount()>=1 ? m.group(1) : null;
@@ -270,13 +300,13 @@ public class MetarParserServiceImpl implements MetarParserService {
         String gust= m.groupCount()>=3 ? m.group(3) : null;
         String unit= m.groupCount()>=4 ? m.group(4) : "KT";
 
-        if ("VRB".equals(direction)) {
+        if("VRB".equals(direction)) {
             sb.append("variable");
-        } else if (direction !=null) {
+        }else if (direction !=null) {
             sb.append(direction.replaceFirst("^0+(?!$)","")).append(" degrees relative to true north");
         }
 
-        if (speed != null) {
+        if(speed != null) {
             sb.append(" at ").append(speed.replaceFirst("^0+(?!$)","")).append(" ");
             if ("MPS".equals(unit)) {
                 sb.append("meters per second");
@@ -285,7 +315,7 @@ public class MetarParserServiceImpl implements MetarParserService {
             }
         }
 
-        if (gust != null) {
+        if(gust != null) {
             sb.append(", gusting up to ").append(gust.substring(1).replaceFirst("^0+(?!$)","")).append(" ");
             sb.append("KT".equals(unit) ? "knots" : "meters per second");
         }

@@ -30,9 +30,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public SubscriptionResponseDto addSubscription(SubscriptionRequestDto subscriptionRequestDto) {
         String icaoCode = subscriptionRequestDto.icaoCode().toUpperCase();
         if(!icaoCode.matches("^[A-Za-z]{4}$")){
-            throw new InvalidIcaoCodeFormatException(
-                    "Invalid ICAO code format. ICAO code must contain exactly 4 letters: "+ icaoCode
-            );
+            throw new InvalidIcaoCodeFormatException("Invalid ICAO code format. ICAO code must contain exactly 4 letters: "+ icaoCode);
         }
         Optional<Subscription> oldSubscription=subscriptionRepository.findByIcaoCode(icaoCode);
         if(oldSubscription.isPresent()){
@@ -73,8 +71,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionRepository.findAll().stream()
                 .filter(sub -> filter.active()==null || sub.isActive() == filter.active())
                 .filter(sub -> filter.name()==null || sub.getIcaoCode().contains(filter.name().toUpperCase()))
-                .map(subscriptionMapper::toDto)
-                .collect(Collectors.toList());
+                .map(subscriptionMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

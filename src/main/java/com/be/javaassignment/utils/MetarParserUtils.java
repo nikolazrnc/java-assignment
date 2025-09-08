@@ -23,7 +23,7 @@ public class MetarParserUtils {
     public static final Pattern PRESSURE = Pattern.compile("\\b([AQ]\\d{4})\\b");
     public static final Pattern WEATHER = Pattern.compile("([-+]?)(VC|RE)?(MI|PR|BC|DR|BL|SH|TS|FZ)?(DZ|RA|SN|SG|GS|GR|PL|IC|UP|FG|BR|HZ|VA|DU|FU|SA|PY|SQ|PO|DS|SS|FC)\\b");
     public static final Pattern CLOUD = Pattern.compile("\\b(SKC|NCD|CLR|NSC|FEW\\d{3}|SCT\\d{3}|BKN\\d{3}|OVC\\d{3}|VV\\d{3})(CB|TCU)?\\b");
-    public static final Pattern RVR = Pattern.compile("\\bR(\\d{2}[LCR]?)/([PM]?)(\\d{4})([UDN]?)\\b");
+    public static final Pattern RVR = Pattern.compile("\\bR(\\d{2})/([PM]?)(\\d{4})([UDN]?)\\b");
     public static final Pattern TREND = Pattern.compile("\\b(NOSIG|BECMG|TEMPO)\\b");
 
 
@@ -100,7 +100,6 @@ public class MetarParserUtils {
                             }
                         }
                     });
-            System.out.println("Loaded ICAO map with " + ICAO_CODES_MAP.size() + " airports.");
         } catch (IOException e) {
             throw new RuntimeException("Failed to load ICAO map from " + filePath, e);
         }
